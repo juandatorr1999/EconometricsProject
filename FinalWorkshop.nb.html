@@ -241,8 +241,39 @@ summary {
 
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShyZWFkeGwpXG51czIwMjBhIDwtIHJlYWRfZXhjZWwoXCJ1czIwMjBhLnhsc3hcIilcbmBgYCJ9 -->
+<pre class="r"><code>library(readxl)
+us2020a &lt;- read_excel(&quot;us2020a.xlsx&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShkcGx5cilcbmBgYCJ9 -->
+<pre class="r"><code>library(dplyr)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5BdHRhY2hpbmcgcGFja2FnZTog4oCYZHBseXLigJlcblxuVGhlIGZvbGxvd2luZyBvYmplY3RzIGFyZSBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOnN0YXRz4oCZOlxuXG4gICAgZmlsdGVyLCBsYWdcblxuVGhlIGZvbGxvd2luZyBvYmplY3RzIGFyZSBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOmJhc2XigJk6XG5cbiAgICBpbnRlcnNlY3QsIHNldGRpZmYsIHNldGVxdWFsLCB1bmlvblxuIn0= -->
+<pre><code>
+Attaching package: ‘dplyr’
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiRmluYWwgV29ya3Nob3AiCmF1dGhvcjogIkp1YW4gRGF2aWQgVG9ycmVzIGFuZCBNYW51ZWwgR2FyY2lhIgpkYXRlOiAiTWF5IDEyIDIwMjEiCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCg==</div>
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGF0YTwtdXMyMDIwYSAlPiVcbiAgICBzZWxlY3QoZmlybSx5ZWFyLHJldmVudWUsY29nczEsc2dhZTEsZXZlcnl0aGluZygpKVxuYGBgIn0= -->
+<pre class="r"><code>data&lt;-us2020a %&gt;%
+    select(firm,year,revenue,cogs1,sgae1,everything())</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiRmluYWwgV29ya3Nob3AiCmF1dGhvcjogIkp1YW4gRGF2aWQgVG9ycmVzIGFuZCBNYW51ZWwgR2FyY2lhIgpkYXRlOiAiTWF5IDEyIDIwMjEiCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCmBgYHtyfQpsaWJyYXJ5KHJlYWR4bCkKdXMyMDIwYSA8LSByZWFkX2V4Y2VsKCJ1czIwMjBhLnhsc3giKQpgYGAKCmBgYHtyfQpsaWJyYXJ5KGRwbHlyKQpkYXRhPC11czIwMjBhICU+JQogICAgc2VsZWN0KGZpcm0seWVhcixyZXZlbnVlLGNvZ3MxLHNnYWUxLGV2ZXJ5dGhpbmcoKSkKYGBgCgo=</div>
 
 
 
