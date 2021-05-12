@@ -270,10 +270,18 @@ The following objects are masked from ‘package:base’:
     select(firm,year,revenue,cogs1,sgae1,everything())</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYWN0aXZlRmlybXNEYXRhIDwtIGRhdGFbZGF0YSRzdGF0dXM9PVwiYWN0aXZlXCJdXG5cbmRhdGEkY2NyZXR1cm5zIDwtIGRpZmYobG9nKGRhdGEkYWRqcHJpY2UpKVxuXG5gYGAifQ== -->
+<pre class="r"><code>activeFirmsData &lt;- data[data$status==&quot;active&quot;]
+
+data$ccreturns &lt;- diff(log(data$adjprice))
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiRmluYWwgV29ya3Nob3AiCmF1dGhvcjogIkp1YW4gRGF2aWQgVG9ycmVzIGFuZCBNYW51ZWwgR2FyY2lhIgpkYXRlOiAiTWF5IDEyIDIwMjEiCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCmBgYHtyfQpsaWJyYXJ5KHJlYWR4bCkKdXMyMDIwYSA8LSByZWFkX2V4Y2VsKCJ1czIwMjBhLnhsc3giKQpgYGAKCmBgYHtyfQpsaWJyYXJ5KGRwbHlyKQpkYXRhPC11czIwMjBhICU+JQogICAgc2VsZWN0KGZpcm0seWVhcixyZXZlbnVlLGNvZ3MxLHNnYWUxLGV2ZXJ5dGhpbmcoKSkKYGBgCgo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiRmluYWwgV29ya3Nob3AiCmF1dGhvcjogIkp1YW4gRGF2aWQgVG9ycmVzIGFuZCBNYW51ZWwgR2FyY2lhIgpkYXRlOiAiTWF5IDEyIDIwMjEiCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCmBgYHtyfQpsaWJyYXJ5KHJlYWR4bCkKdXMyMDIwYSA8LSByZWFkX2V4Y2VsKCJ1czIwMjBhLnhsc3giKQpgYGAKCmBgYHtyfQpsaWJyYXJ5KGRwbHlyKQpkYXRhPC11czIwMjBhICU+JQogICAgc2VsZWN0KGZpcm0seWVhcixyZXZlbnVlLGNvZ3MxLHNnYWUxLGV2ZXJ5dGhpbmcoKSkKYGBgCmBgYHtyfQphY3RpdmVGaXJtc0RhdGEgPC0gZGF0YVtkYXRhJHN0YXR1cz09ImFjdGl2ZSJdCgpkYXRhJGNjcmV0dXJucyA8LSBkaWZmKGxvZyhkYXRhJGFkanByaWNlKSkKCmBgYAoK</div>
 
 
 

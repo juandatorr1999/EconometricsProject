@@ -15,4 +15,10 @@ library(dplyr)
 data<-us2020a %>%
     select(firm,year,revenue,cogs1,sgae1,everything())
 ```
+```{r}
+activeFirmsData <- data[data$status=="active"]
+
+data$ccreturns <- diff(log(data$adjprice))
+
+```
 
