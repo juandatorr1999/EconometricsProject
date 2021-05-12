@@ -1,6 +1,7 @@
 ---
 title: "Final Workshop"
-author: "Juan David Torres"
+author: "Juan David Torres and Manuel Garcia"
 date: "May 12 2021"
 output: html_notebook
 ---
+
