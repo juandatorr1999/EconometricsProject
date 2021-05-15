@@ -16,3 +16,51 @@ data<-us2020a %>%
     select(firm,year,revenue,cogs1,sgae1,everything())
 ```
 
+```{r}
+active_firms <- data[data$status=='active',] 
+data_active_2020 <- active_firms[active_firms$year==2020, ] 
+financial_statement<-data_active_2020 %>%
+    select(totalassets,totalliabilities,stockholderequity,revenue,ebit1, marketcap)
+
+library(pastecs)
+stat.desc(financial_statement)
+```
+
+## Interpretation. 
+
+Total assets. The min amount for total assets from a firm are 266,000 USD, while having a max of 3,386,071,000,000 USD. The average amount of assets are 15,664,250,000 USD while 95% of the firms are enclosed on an interval of +/- 3,752,904,000 USD to the mean.
+
+Total liabilities. The min amount for total liabilities from a firm are 12,000 USD, while having a max debt of 3,106,717,000,000 USD. The average amount of liabilities are 1,676,405,000 USD while 95% of the firms are enclosed on an interval of +/- 3,352,810,000 USD to the mean.
+
+Stock holder equity. The min equity from stakeholders from a firm is -18,075,000,000 USD, while having a max equity of 443,164,000,000 USD. The average amount of equity is 3,296,547,000 USD while 95% of the firms are enclosed on an interval of +/- 537,709,800 USD to the mean.
+
+Revenue. The min revenue from a firm is -17,156,000 USD, while having a max revenue of 523,964,000,000 USD. The average amount of revenue is 4,616,703,000 USD while 95% of the firms are enclosed on an interval of +/- 702,469,200 USD to the mean.
+
+Earning before interests and taxes. The min ebit from a firm is -29,448,000,000 USD, while having a max amount of 66,288,000,000 USD. The average ebit from firms are 452,509,400 USD while 95% of the firms are enclosed on an interval of +/- 112,073,120 USD to the mean.
+
+Market cap. The min market cap from a firm is 1874 USD, while having a max amount of 1,980,645,000,000 USD. The average market cap from firms are 11,868,480,000 USD while 95% of the firms are enclosed on an interval of +/- 2,349,738,000 to the mean.
+
+
+
+```{r}
+industries<-unique(data_active_2020$cnaics1)
+data_active_2020 %>%                               # Summary by group using dplyr
+  group_by(data_active_2020$cnaics1) %>% 
+  summarize(firms = n(),
+            median_total_assets = median(totalassets, na.rm = TRUE),
+            median_market_cap = median(marketcap, na.rm = TRUE))
+```
+
+## Interpretation
+
+Without considering the "-" Industry, is easily recognizable that the Utilities Industry  has the highest median market cap and median total assets depicting their importance on the US environment. On the other side, the Information industry has the second highest median market cap, while Finance and Insurance having the second highest median total assets. Based on these terms, the industries of Utilities, Information and FInance and Insurance have the greater impact based on total assets and market cap, but it is important to highlight the absurd amount of firms from the Manufacturign Industry (1364).
+
+
+```{r}
+library(plm)
+paneldata <- pdata.frame(active_firms, index = c("firm", "year"))
+paneldata$r_a <- diff(log(paneldata$adjprice))
+paneldata$R_a <- exp(paneldata$r_a) -1
+
+```
+
