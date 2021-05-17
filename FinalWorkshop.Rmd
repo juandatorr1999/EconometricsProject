@@ -5,6 +5,8 @@ date: "May 12 2021"
 output: html_notebook
 ---
 
+# Descriptive statistics of the US market
+
 ```{r}
 library(readxl)
 us2020a <- read_excel("us2020a.xlsx")
@@ -53,7 +55,7 @@ data_active_2020 %>%                               # Summary by group using dply
 
 ## Interpretation
 
-Without considering the "-" Industry, is easily recognizable that the Utilities Industry  has the highest median market cap and median total assets depicting their importance on the US environment. On the other side, the Information industry has the second highest median market cap, while Finance and Insurance having the second highest median total assets. Based on these terms, the industries of Utilities, Information and FInance and Insurance have the greater impact based on total assets and market cap, but it is important to highlight the absurd amount of firms from the Manufacturign Industry (1364).
+Without considering the "-" Industry, is easily recognizable that the Utilities Industry  has the highest median market cap and median total assets depicting their importance on the US environment. On the other side, the Information industry has the second highest median market cap, while Finance and Insurance having the second highest median total assets. Based on these terms, the industries of Utilities, Information and Finance and Insurance have the greater impact based on total assets and market cap, but it is important to highlight the absurd amount of firms from the Manufacturing Industry (1364).
 
 
 ```{r}
@@ -64,3 +66,48 @@ paneldata$R_a <- exp(paneldata$r_a) -1
 
 ```
 
+# Fundamental Analysis
+
+## The Relevance of Using Accounting Fundamentals in the Mexican Stock Market
+
+The paper presents the importance of employing fundamental analysis over the Mexican stock market in order to obtain greater returns on a stock portfolio over one - two year holding period. Through the research over different markets and their proposed signals two are selected to be applied on the selected context based on the available information from the Mexican firms, named F-Score and L-Score. Their importance and probabilistic significance is proofed through 5 regression models, the paper concludes showing an investment strategy using accounting fundamental scores is stronger than a traditional market index investment strategy.
+
+F-Score is computed through the sum of nine discrete fundamental measures (F1, F2, F3, F4, F5, F6, F7, F8, F9). 
+F1 = (Return On Assets at t > 0) ? 1 : 0
+F2 = (Cash Flow from Operations at t > 0) ? 1 : 0
+F3 = (Change of Return On Assets > 0) ? 1 : 0
+F4 = ( (Cash low from operations at t)/ (Total Asset at the beginning of the period) > Return On Assets at t ) ? 1 : 0
+F5 = (Change of (Long term debt / Average assets) < 0 ) 1 : 0
+F6 = (Change of (Current Assets / Current liabilities) < 0) 1 : 0 
+F7 = (Change in common share outstanding > 0 ) 1 : 0
+F8 = (Change of (Gross Margin at t / Assets at the beginning of the period) > 0) 1 : 0
+F9 = (Change of (Sales at t / Assets at the beginning of the period) > 0) 1 : 0
+
+Then  F-Score = F1 + F2 + F3 + F4 + F5 + F6 + F7 + F8 + F9
+
+
+Along the paper, the F-Score is used as a composite score that conveys information about annual improvements of firm profitability, financial leverage, and inventory turnover, as a result, high F-scores imply potential abnormal positive returns and future growth, which is aids the objective of the research for acquiring greater returns through fundamental analysis. 
+
+## Interpretation of the paper regressions
+
+Model 1 - Earnings response coefficient. Having a  R which represents the 12 month excess firms returns over the market index as a dependent variable, an alpha coefficient of −0.08 was obtained, with a t-value of -7.17 as a result we can consider this coefficient statistically significantly. Meaning that in more of the 95% of the cases the average excess return without considering epsp will be of −0.08. Now observing EPSP, a beta value of 0.023 is considered statistically significant with a t-value of 4.18. Which ensures that an increase of 1 point on EPSP will result on an increment of 0.023 over the 12 month excess return over the market index.
+
+Model 2 - Benchmark. Based on this model, we are trying to explain R, which is the 12 month excess firms returns over the market index. We have an alpha of -0.451, which is statistically significant thanks to a t-value of -4.31, representing a median base value of -0.451 for the return without considering any independent variable. Similarly, EPSP, after considering the effect of BMR and firm-size, depicts an statistically significant value of 0.021, implying an increase on 0.021 excess return per point increased on EPSP Then, BMR resulted with a coefficient of 0 while having a t-value of −0.14 we conclude that it is not statistically significant and it has no effect over the excess return due to its coefficient. Finally, the firm size obtained a coefficient of 0.024, after considering BMR and EPSP, and because of a t-value of 3.62 we say that it is statistically significant.
+
+Model 3 - Value Relevance of F-score. Over this model, we encounter the same dependent variable that the two previous models. Here the alpha corresponds to an statistically significant value of -0.73 which means that as a base value we will obtain -0.73 from excess return regardless of the independent variables. Now, regarding EPSP after considering BMR, size and F-Score, is statistically significant with a p-value < 0.05 and a coefficient value of 0.012, meaning an increase of 0.012 in excess return for every point of EPSP. Talking about BMR, and after considering the other independent variables, its coefficient is non statistically significant due to a t-value of -0.57, with a mean value of −0.002. Later speaking about size after all effects from the other variables, an statistically significant increase of 0.024 per point of size is shown.Finally, a strong relationship between F-Score and excess return appears with a t-value of 6.04 (statistically significant) and a coefficient value of 0.059, it represents the biggest increase of excess return from all other independent variables.
+
+Model 4 - Value Relevance of L-score. The interception of this model (alpha) has a coefficient of -0.56 excess return which confirms that if every independent variable had a value of 0 the excess return will be negative over the market index. From all beta coefficients from de independent variables, BMR after considering the ffect of the others, is a non statistically significant coefficient with a negative impact of -0.002 over the excess return. While the other coefficients (EPSP, size, L-Score) are statistically significant, after considering the effects of every other independent variable, with t-values of 2.87, 3.11, 2.74 respectively, as a result for each point increased over EPSP, size and L-Score a positive excess return of 0.017, 0.023, 0.024 is expected.
+
+
+Model 5 - Value Relevance of Fundamentals. As shown in other models, the alpha coefficient from the regression is negative and statistically significant with a value of -0.709, and also represents the base expected excess return from the regression. Then BMR after considering the other four independent variables (EPSP, SIZE, F-SCORE, L-SCORE) has a negative coefficient value of -0.002 and is not statistically significant due to a t-value of -0.67. At the same time, we encounter an L-SCORE with an almost statistically significant coefficient beacuse of a t-value of 1.81 and a coefficient value of 0.016. Finally, EPSP, SIZE, and F-SCORE are statistically significant (for their respective t-values 2.52, 2.68, 5.32) and they have positive beta values of 0.015, 0.020, 0.054 respectively, meaning that for each increased point over those independet variables a greater excess return will be obrtained on the firms.
+
+
+## Calculate F-Scores
+
+```{r}
+panel <- paneldata %>%
+   group_by(firm) %>%
+   mutate( roa_t = (lag(totalassets) + totalassets )/2, c_roa = ( roa_t - lag(roa_t) ), cash_assets_t = cashflowoper/lag(totalassets), c_shr_out =( sharesoutstanding - lag(sharesoutstanding) ) ,f1 = (ifelse(roa_t>0 , 1, 0)), f2 = (ifelse(cashflowoper>0, 1, 0)), f3 = (ifelse(c_roa>0 , 1, 0)),  f4 = (ifelse(cash_assets_t>roa_t , 1, 0)), f7 = (ifelse(c_shr_out>0 , 1, 0))) 
+```
+
+// Falta f5-f6-f8-f9 y f-score
