@@ -1,26 +1,40 @@
 ---
 title: "Final Workshop"
-author: "Juan David Torres and Manuel Garcia"
+author: "Juan David Torres A01702686 and Manuel Garcia A01701414"
 date: "May 12 2021"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 # Descriptive statistics of the US market
 
 ```{r}
+# No scientific notation
+options(scipen=999)
+
+#Read Excel
 library(readxl)
 us2020a <- read_excel("us2020a.xlsx")
+
 ```
 
 ```{r}
+#Data management
 library(dplyr)
+
+#First columns selected to show first
 data<-us2020a %>%
     select(firm,year,revenue,cogs1,sgae1,everything())
 ```
 
 ```{r}
+#Obtain the active firms
 active_firms <- data[data$status=='active',] 
+
+#Active firms in 2020
 data_active_2020 <- active_firms[active_firms$year==2020, ] 
+
 financial_statement<-data_active_2020 %>%
     select(totalassets,totalliabilities,stockholderequity,revenue,ebit1, marketcap)
 
@@ -134,3 +148,172 @@ paneldata$f9 <- (ifelse(paneldata$c_sales_lag_ta>0 , 1, 0))
 paneldata$fscore <- paneldata$f1 + paneldata$f2 + paneldata$f3 + paneldata$f4 + paneldata$f5 + paneldata$f6 + paneldata$f7 + paneldata$f8 + paneldata$f9 
 
 ```
+
+# 2.3 Replicate Models and 2.4 Interpretation of the Models
+
+```{r}
+library(statar)
+library(plm)
+
+# paneldata$bookvalue <- paneldata$totalassets - paneldata$totalliabilities
+# paneldata$marketvalue<-paneldata$originalhistoricalstockprice*paneldata$sharesoutstanding
+# paneldata$bmr <- paneldata$bookvalue / paneldata$marketvalue
+
+paneldata$bookvalue = paneldata$totalassets - paneldata$totalliabilities
+paneldata$mktvalue = paneldata$originalprice * paneldata$sharesoutstanding
+paneldata$bmr = paneldata$bookvalue/paneldata$mktvalue
+paneldata$eps = paneldata$ebit1/paneldata$sharesoutstanding
+paneldata$epsp = paneldata$eps/paneldata$originalprice
+paneldata$log_size = log(paneldata$totalassets)
+paneldata
+
+
+paneldata_nonfin = paneldata[paneldata$cnaics1!="Finance and Insurance",]
+
+
+```
+Model 1
+```{r}
+#Model 1: Earnings response coefficient
+paneldata_nonfin$epsp_w <- winsorize(paneldata_nonfin$epsp,probs = c(0.02,0.98))
+model_1 = plm(lag(r_a,-1) ~ epsp_w, data = paneldata_nonfin, model="pooling", na.action = na.omit )
+s_model_1 = summary(model_1)
+s_model_1
+```
+```{r}
+low_epsp = 0.335834 - (2*0.015751)
+high_epsp = 0.335834 + (2*0.015751)
+low_epsp
+high_epsp
+```
+
+The model 1 represents the effect of earn per share deflated by price in the returns one year later. The dependent variable is the cc returns one year later and the independent variable is the epsp. An increase by one unit of the earnings per share deflated by price increases by 0.335834 the one year later return, it is statistically significant due to its very low p value which is 0.00000000000000022 lower than 0.05. If the espsp is 0 then the return one year later is equal 0.025635 and this is statistically significant because the p value is equal to 0.00000000002353 which is lower than 0.05. The 95% confidence interval for epsp is 0.304332 to 0.367336 which means that with a 95% confidence the coefficient for epsp is goes from those two values.
+
+In contrast with the model shown in the paper from the Mexican market the epsp has a much lower impact on the model because the coefficient is 0.023 which shows that with an increase in one unit in the epsp increases by 0.023 the excess one year later returns with respect to the market. Although in the models the dependent variable differs there's not that much of a difference which means in the US market there is a much bigger impact when the epsp increases in the future on year later returns.
+
+Model 2
+```{r}
+#Model 2
+paneldata_nonfin$bmr_w <- winsorize(paneldata_nonfin$bmr,probs = c(0.02,0.98))
+model_2 = plm(lag(r_a,-1) ~ epsp_w + bmr_w + log_size, data = paneldata_nonfin, model="pooling", na.action = na.omit)
+s_model_2 = summary(model_2)
+s_model_2
+```
+The model 2 represents the effect of epsp, book to market ratio and size in the one year later return of a firm in the US market. The independent variables are the epsp, bmr and size, and the independent variable is the cc return one year later. After considering the effect of bmr and size, when the epsp increases by one unit the future return one year later increases by 0.2562912, the p value is 0.00000000000000022 and is statistically significant because the p value is lower than 0.05.
+
+After considering the effect of epsp and log size the increase in one unit of book to market ratio increases the one year later return by 0.0314318 and the p value is 0.0003815 which means that is statistically significant the effect of the bmr in the one year later returns.
+
+After considering the effect of the bmr and the epsp the increase in log (assets) of one unit increases by 0.0206492 the one year later returns and the p value is 0.00000000000000022 which means it's statistically significant.
+
+If the bmr, the epsp and the size are all equal to 0 the return one year later will be equal to -0.2721324 which is the intercept. The p value is 0.00000000000000022 which means it is statistically significant.
+
+In contrast with the model 2 in the paper which models the Mexican market the epsp coefficient is 0.021 which is much lower than the one on the model for the US market this means that the effect of the epsp on the one year later excess returns with respect to the market for the mexican market is much lower than the effect on the one year later future returns on the US market but they are both positive. On the other hand an increase in the bmr on the mexican market decreases the one year later excess return with respect to the market by −0.000 with a t value of −0.14 which means its not significant, different from the the US market which the relation is positive and significant. The log(assets) for the Mexican market, when there's an increase of one unit on log(assets) or the size the excess one year later returns increase by 0.024 and is significant because the t value is 3.62 which is higher than 2, the relation is positive as well as for the us market and the effect of the size impacts more on the mexican market than in the US market because the coefficient is bigger on the mexican market.
+```{r}
+#Model 3
+
+model_3 = plm(lag(r_a,-1) ~ epsp_w + bmr_w + log_size + fscore, data = paneldata_nonfin, model="pooling", na.action = na.omit)
+s_model_3 = summary(model_3)
+s_model_3
+```
+The model 3 represents the effect of epsp, book to market ratio, size and the fscore in the one year later return of a firm in the US market. The independent variables are the epsp, bmr, size represented by the log(assets) and the f score, the independent variable is the cc return one year later. After considering the effect of bmr, size and f score, when the epsp increases by one unit the future return one year later increases by 0.2515401, the p value is 0.00000000000000022 and is statistically significant because the p value is lower than 0.05.
+
+After considering the effect of epsp, size and f score the increase in one unit of book to market ratio increases the one year later return by 0.0313760 and the p value is 0.0003906 which means that is statistically significant the effect of the bmr in the one year later returns.
+
+After considering the effect of the bmr, epsp and fscore the increase in log (assets) of one unit increases by 0.0199411 the one year later returns and the p value is 0.00000000000000022 which means it's statistically significant.
+
+After considering the effect of the bmr, epsp and size the increase of the f score by one unit increases by 0.0038851 the one year later returns and the p value is 0.0558239 which means it's not statistically significant because is higher than 0.05.
+
+If the bmr, the epsp, the size and the f score are all equal to 0 the return one year later will be equal to -0.2813023 which is the intercept. The p value is 0.00000000000000022 which means it is statistically significant.
+
+In contrast with the model 3 in the paper which models the same independent variables and the dependent variable is the market excess return oen year later  in the Mexican market the epsp coefficient is 0.012 which is much lower than the one on the model for the US market this means that the effect of the epsp on the one year later excess returns with respect to the market for the mexican market is much lower than the effect on the one year later future returns on the US market but they are both positive. On the other hand an increase in the bmr on the mexican market decreases the one year later excess return with respect to the market by −0.002 with a t value of −0.57 which means its not significant, different from the the US market which the relation is positive and significant. The log(assets) for the Mexican market, when there's an increase of one unit on log(assets) or the size, the excess one year later returns increase by 0.024 and is significant because the t value is 3.38 which is higher than 2, the relation is positive as well as for the us market and the effect of the size impacts more on the mexican market than in the US market because the coefficient is bigger on the mexican market. For the f score the coefficient is 0.059 which is much higher than for the US market which means that the an increase in one unit on the f score on the Mexican market increases more the one year later return than for the firms in the US market and is significant because the t value is 6.04 which is higher than 2.
+
+# 2.5 Portfolio
+```{r}
+#Get the data for 2019 only
+paneldata_2019 = paneldata[paneldata$year==2019,]
+
+# sorted2019 = paneldata_2019[order(paneldata_2019$fscore,decreasing = TRUE),]
+sorted2019 = paneldata_2019[order(paneldata_2019$fscore,paneldata_2019$epsp,decreasing = TRUE),]
+
+top10 = sorted2019[1:10,]
+
+toptickers = as.vector(top10$firm)
+toptickers
+
+
+```
+```{r}
+library(quantmod)
+getSymbols(Symbols = toptickers, from="2020-01-01", to="2020-12-31")
+```
+
+```{r}
+library(PerformanceAnalytics)
+#library(tidyverse)
+library(highcharter)
+prices = Ad(merge(MESA, AL, NFG, TCS, SWM, FRTA, EBF, NWPX, ABM, RLGT))
+Returns = na.omit(Return.calculate(prices))
+charts.PerformanceSummary(Returns,main="Performance of $1.00 over time",wealth.index = TRUE)
+```
+Create an equally weighted portfolio with the 10 stocks
+```{r}
+w_ew = rep(0.1,10)
+w_ew
+portfolio_returns_ew = Return.portfolio(Returns,weights = w_ew)
+
+colnames(portfolio_returns_ew) = c("Portfolio Returns")
+charts.PerformanceSummary(portfolio_returns_ew,main="Performance of $1.00 over time",wealth.index = TRUE)
+```
+```{r}
+library(quantmod)
+getSymbols(Symbols = "^GSPC", from="2020-01-01", to="2020-12-31")
+spx500 = Ad(GSPC)
+
+ReturnsSPX = na.omit(Return.calculate(spx500))
+ReturnsTotal = merge(ReturnsSPX,portfolio_returns_ew)
+charts.PerformanceSummary(ReturnsTotal,main="Performance of $1.00 on the SPX 500 over time",wealth.index = TRUE)
+```
+The S&P500 and the portfolio holding returns were very similar and most of the the time the S&P was higher but at the end of the year 2020 both returns were very similar with the actual created portfolio performing little bit better that the market but it was not a high difference which means that the S&P500 is a great way to invest and can give great returns in contrast with a construction of a portfolio based on the f score and the earnings per share deflated by price which is the most explicative independent variable from the model 3 because it has a very low p value.
+
+# 3 Examining the probability of bankrupcy/surviving
+
+The logit model is a non linear that is used to predict the probability of being or 0 or 1 of a binary variable, so for example to know whether you passed or not the course is a binary variable because there are only two options, or you pass or you fail and this is represented with 0 or 1. This uses the sigmoid function to find the probability which is 1/(1-e^-(B1+B2X1)) and is also known as the logistic distribution function. The function can also be written as Pi = 1/(1+e^-z) = e^z/(1+e^z)  where Pi is the probability of being 1 and (1-Pi) is the probability of being 0. Pi/(1-Pi) is the odds ratio which means the ratio probability that the event in study happens, but when the ln(odds_ratio) goes from -infinity to +infinity.
+
+a)
+```{r}
+#Load necessary libraries
+library(aod)
+library(ggplot2)
+library(plm)
+# Create data frame for the logit model
+dataLogit = pdata.frame(data, index = c("firm", "year"))
+
+# Create a new column with binary between active and not
+dataLogit$statusBinary<-ifelse(dataLogit$status=="active",1,0)
+
+#Calculations cash flow ratio and financial leverage
+dataLogit$cashflowratio = ifelse(dataLogit$totalassets!=0 ,dataLogit$cashflowoper/dataLogit$totalassets,NA)
+dataLogit$financialleverage = ifelse(dataLogit$totalassets != 0, (dataLogit$longdebt1+dataLogit$shortdebt)/dataLogit$totalassets,NA)
+
+# Run the logit model 
+mylogit <- glm(statusBinary ~ financialleverage + cashflowratio,data = dataLogit, family = "binomial",na.action = na.omit)
+
+#Summary of the model 
+summary(mylogit)
+
+#Get the odds ratio
+exp(mylogit$coefficients)
+```
+```{r}
+(0.9993798-1)
+```
+
+b) Interpretation
+
+The following model check whether there's a relation between the financial leverage, the cash flow ratio and the probability of the firm on going bankrupt. The dependent variable is if the firm is active or not active which is being represented with 1 and 0 respectively. The independent variables are the financial leverage and cash flow ratio. 
+
+After considering the effect of the cash flow ratio an increase in one unit of financial leverage decreases the log odds of being active versus going bankrupt by -0.0006204. Therefore the odds of being active decreases -0.0006202 when the financial leverage increases by one unit. This is not statistically significant because the p value is 0.859 which is much bigger than 0.05 and this means that there's no certainty that the above statement is true.
+
+After considering the effect of the financial leverage an increase in the cash flow rate will increase the log odds rate of the firm being active by 0.0035873. Therefore the odds rate of being active will increase by 0.0035938 when the cash flow ratio increases by one unit. But it is no statistically significant because the p value is 0.644 and is above 0.05.
+
+
