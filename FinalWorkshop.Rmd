@@ -6,6 +6,13 @@ output:
   html_document:
     df_print: paged
 ---
+# Introduction 
+
+Along with this workshop, a fundamental analysis is made from the U.S companies in order to predict and determine several characteristics related to survivability and the amount of expected return after investing in these companies. This was possible through the use of a complete dataset with all U.S companies from 2006 to 2019, and data like net income, expenses, total assets, adjusted prices, debt, activeness, field, etc. 
+
+The use of indicators and models, as tools for the calculation of the characteristics previously mentioned, is depicted in the workshop by the employment of F-Score for its capacity to define a successful portfolio investment and the use of the logit model to define an outcome with only two possibilities.
+
+
 
 # Descriptive statistics of the US market
 
@@ -317,3 +324,10 @@ After considering the effect of the cash flow ratio an increase in one unit of f
 After considering the effect of the financial leverage an increase in the cash flow rate will increase the log odds rate of the firm being active by 0.0035873. Therefore the odds rate of being active will increase by 0.0035938 when the cash flow ratio increases by one unit. But it is no statistically significant because the p value is 0.644 and is above 0.05.
 
 
+# Conclusion
+
+
+
+After the analysis of these companies and the characteristics meant to reach by this workshop, we can observe a real application of Econometrics as a helper tool to create informed portfolio investments. Indicators like F-Score or signals, like the ones applied for inventory, are incredible resources to formalize fundamental analysis over companies and to obtain a broader perspective over their current status.
+
+At the same time, we understand that emerging markets, like Mexico, have not been properly explored in comparison to markets like U.S or China. As a result, more research is needed to comprehend the different properties that control the behavior of these markets.
