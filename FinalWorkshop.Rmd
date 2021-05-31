@@ -7,7 +7,7 @@ output:
     df_print: paged
 ---
 
-# Descriptive statistics of the US market
+# 1. Descriptive statistics of the US market
 
 ```{r}
 # No scientific notation
@@ -27,7 +27,7 @@ library(dplyr)
 data<-us2020a %>%
     select(firm,year,revenue,cogs1,sgae1,everything())
 ```
-
+## 2.1
 ```{r}
 #Obtain the active firms
 active_firms <- data[data$status=='active',] 
@@ -42,7 +42,7 @@ library(pastecs)
 stat.desc(financial_statement)
 ```
 
-## Interpretation. 
+### Interpretation. 
 
 Total assets. The min amount for total assets from a firm are 266,000 USD, while having a max of 3,386,071,000,000 USD. The average amount of assets are 15,664,250,000 USD while 95% of the firms are enclosed on an interval of +/- 3,752,904,000 USD to the mean.
 
@@ -67,7 +67,7 @@ data_active_2020 %>%                               # Summary by group using dply
             median_market_cap = median(marketcap, na.rm = TRUE))
 ```
 
-## Interpretation
+### Interpretation
 
 Without considering the "-" Industry, is easily recognizable that the Utilities Industry  has the highest median market cap and median total assets depicting their importance on the US environment. On the other side, the Information industry has the second highest median market cap, while Finance and Insurance having the second highest median total assets. Based on these terms, the industries of Utilities, Information and Finance and Insurance have the greater impact based on total assets and market cap, but it is important to highlight the absurd amount of firms from the Manufacturing Industry (1364).
 
@@ -80,9 +80,9 @@ paneldata$R_a <- exp(paneldata$r_a) -1
 ```
 
 
-# Fundamental Analysis
+# 2. Fundamental Analysis
 
-## The Relevance of Using Accounting Fundamentals in the Mexican Stock Market
+## 2.1 The Relevance of Using Accounting Fundamentals in the Mexican Stock Market
 
 The paper presents the importance of employing fundamental analysis over the Mexican stock market in order to obtain greater returns on a stock portfolio over one - two year holding period. Through the research over different markets and their proposed signals two are selected to be applied on the selected context based on the available information from the Mexican firms, named F-Score and L-Score. Their importance and probabilistic significance is proofed through 5 regression models, the paper concludes showing an investment strategy using accounting fundamental scores is stronger than a traditional market index investment strategy.
 
@@ -102,7 +102,7 @@ Then  F-Score = F1 + F2 + F3 + F4 + F5 + F6 + F7 + F8 + F9
 
 Along the paper, the F-Score is used as a composite score that conveys information about annual improvements of firm profitability, financial leverage, and inventory turnover, as a result, high F-scores imply potential abnormal positive returns and future growth, which is aids the objective of the research for acquiring greater returns through fundamental analysis. 
 
-## Interpretation of the paper regressions
+### Interpretation of the paper regressions
 
 Model 1 - Earnings response coefficient. Having a  R which represents the 12 month excess firms returns over the market index as a dependent variable, an alpha coefficient of −0.08 was obtained, with a t-value of -7.17 as a result we can consider this coefficient statistically significantly. Meaning that in more of the 95% of the cases the average excess return without considering epsp will be of −0.08. Now observing EPSP, a beta value of 0.023 is considered statistically significant with a t-value of 4.18. Which ensures that an increase of 1 point on EPSP will result on an increment of 0.023 over the 12 month excess return over the market index.
 
@@ -116,7 +116,7 @@ Model 4 - Value Relevance of L-score. The interception of this model (alpha) has
 Model 5 - Value Relevance of Fundamentals. As shown in other models, the alpha coefficient from the regression is negative and statistically significant with a value of -0.709, and also represents the base expected excess return from the regression. Then BMR after considering the other four independent variables (EPSP, SIZE, F-SCORE, L-SCORE) has a negative coefficient value of -0.002 and is not statistically significant due to a t-value of -0.67. At the same time, we encounter an L-SCORE with an almost statistically significant coefficient beacuse of a t-value of 1.81 and a coefficient value of 0.016. Finally, EPSP, SIZE, and F-SCORE are statistically significant (for their respective t-values 2.52, 2.68, 5.32) and they have positive beta values of 0.015, 0.020, 0.054 respectively, meaning that for each increased point over those independet variables a greater excess return will be obrtained on the firms.
 
 
-## Calculate F-Scores
+## 2.2 Calculate F-Scores
 
 ```{r}
 paneldata$lag_ta<- ifelse(is.na(plm::lag(paneldata$totalassets, 1)), paneldata$totalassets, plm::lag(paneldata$totalassets, 1)) 
@@ -149,16 +149,13 @@ paneldata$fscore <- paneldata$f1 + paneldata$f2 + paneldata$f3 + paneldata$f4 + 
 
 ```
 
-# 2.3 Replicate Models and 2.4 Interpretation of the Models
+## 2.3 Replicate Models and 2.4 Interpretation of the Models
 
 ```{r}
 library(statar)
 library(plm)
 
-# paneldata$bookvalue <- paneldata$totalassets - paneldata$totalliabilities
-# paneldata$marketvalue<-paneldata$originalhistoricalstockprice*paneldata$sharesoutstanding
-# paneldata$bmr <- paneldata$bookvalue / paneldata$marketvalue
-
+# Calculation for the models that are going to be modeled after
 paneldata$bookvalue = paneldata$totalassets - paneldata$totalliabilities
 paneldata$mktvalue = paneldata$originalprice * paneldata$sharesoutstanding
 paneldata$bmr = paneldata$bookvalue/paneldata$mktvalue
@@ -167,20 +164,24 @@ paneldata$epsp = paneldata$eps/paneldata$originalprice
 paneldata$log_size = log(paneldata$totalassets)
 paneldata
 
-
+# Get the non financiall firms
 paneldata_nonfin = paneldata[paneldata$cnaics1!="Finance and Insurance",]
 
 
 ```
-Model 1
+### Model 1
 ```{r}
-#Model 1: Earnings response coefficient
+# Earnings per share deflated by price winzorized
 paneldata_nonfin$epsp_w <- winsorize(paneldata_nonfin$epsp,probs = c(0.02,0.98))
+
+# The regression with the returns one year later
 model_1 = plm(lag(r_a,-1) ~ epsp_w, data = paneldata_nonfin, model="pooling", na.action = na.omit )
+# Summary of the model 1
 s_model_1 = summary(model_1)
 s_model_1
 ```
 ```{r}
+# Confidence interval for epsp in the 1 model
 low_epsp = 0.335834 - (2*0.015751)
 high_epsp = 0.335834 + (2*0.015751)
 low_epsp
@@ -191,11 +192,15 @@ The model 1 represents the effect of earn per share deflated by price in the ret
 
 In contrast with the model shown in the paper from the Mexican market the epsp has a much lower impact on the model because the coefficient is 0.023 which shows that with an increase in one unit in the epsp increases by 0.023 the excess one year later returns with respect to the market. Although in the models the dependent variable differs there's not that much of a difference which means in the US market there is a much bigger impact when the epsp increases in the future on year later returns.
 
-Model 2
+### Model 2
 ```{r}
-#Model 2
+
+# Winzorize the bmr
 paneldata_nonfin$bmr_w <- winsorize(paneldata_nonfin$bmr,probs = c(0.02,0.98))
+# Create the regression the same as the model 2 on the paper
 model_2 = plm(lag(r_a,-1) ~ epsp_w + bmr_w + log_size, data = paneldata_nonfin, model="pooling", na.action = na.omit)
+
+# Summary of the model 
 s_model_2 = summary(model_2)
 s_model_2
 ```
@@ -208,10 +213,13 @@ After considering the effect of the bmr and the epsp the increase in log (assets
 If the bmr, the epsp and the size are all equal to 0 the return one year later will be equal to -0.2721324 which is the intercept. The p value is 0.00000000000000022 which means it is statistically significant.
 
 In contrast with the model 2 in the paper which models the Mexican market the epsp coefficient is 0.021 which is much lower than the one on the model for the US market this means that the effect of the epsp on the one year later excess returns with respect to the market for the mexican market is much lower than the effect on the one year later future returns on the US market but they are both positive. On the other hand an increase in the bmr on the mexican market decreases the one year later excess return with respect to the market by −0.000 with a t value of −0.14 which means its not significant, different from the the US market which the relation is positive and significant. The log(assets) for the Mexican market, when there's an increase of one unit on log(assets) or the size the excess one year later returns increase by 0.024 and is significant because the t value is 3.62 which is higher than 2, the relation is positive as well as for the us market and the effect of the size impacts more on the mexican market than in the US market because the coefficient is bigger on the mexican market.
-```{r}
-#Model 3
 
+### Model 3
+```{r}
+# Regression for the 3 model for the US market
 model_3 = plm(lag(r_a,-1) ~ epsp_w + bmr_w + log_size + fscore, data = paneldata_nonfin, model="pooling", na.action = na.omit)
+
+# Summary of the model
 s_model_3 = summary(model_3)
 s_model_3
 ```
@@ -227,50 +235,70 @@ If the bmr, the epsp, the size and the f score are all equal to 0 the return one
 
 In contrast with the model 3 in the paper which models the same independent variables and the dependent variable is the market excess return oen year later  in the Mexican market the epsp coefficient is 0.012 which is much lower than the one on the model for the US market this means that the effect of the epsp on the one year later excess returns with respect to the market for the mexican market is much lower than the effect on the one year later future returns on the US market but they are both positive. On the other hand an increase in the bmr on the mexican market decreases the one year later excess return with respect to the market by −0.002 with a t value of −0.57 which means its not significant, different from the the US market which the relation is positive and significant. The log(assets) for the Mexican market, when there's an increase of one unit on log(assets) or the size, the excess one year later returns increase by 0.024 and is significant because the t value is 3.38 which is higher than 2, the relation is positive as well as for the us market and the effect of the size impacts more on the mexican market than in the US market because the coefficient is bigger on the mexican market. For the f score the coefficient is 0.059 which is much higher than for the US market which means that the an increase in one unit on the f score on the Mexican market increases more the one year later return than for the firms in the US market and is significant because the t value is 6.04 which is higher than 2.
 
-# 2.5 Portfolio
+## 2.5 Portfolio
 ```{r}
 #Get the data for 2019 only
 paneldata_2019 = paneldata[paneldata$year==2019,]
 
-# sorted2019 = paneldata_2019[order(paneldata_2019$fscore,decreasing = TRUE),]
+#Sort the data first by fscore and then by epsp which is the the most explicative variable in the 3 model
 sorted2019 = paneldata_2019[order(paneldata_2019$fscore,paneldata_2019$epsp,decreasing = TRUE),]
 
+# Get the top 10 of the already ordered table
 top10 = sorted2019[1:10,]
 
+# Convert them as vectors so their information can be recovered with getSymbols
 toptickers = as.vector(top10$firm)
 toptickers
 
 
 ```
 ```{r}
+# Load quantmod library to use get symbols
 library(quantmod)
+
+# Get all the symbols from the toptickers vector for the whole 2020 year
 getSymbols(Symbols = toptickers, from="2020-01-01", to="2020-12-31")
 ```
 
 ```{r}
 library(PerformanceAnalytics)
-#library(tidyverse)
 library(highcharter)
+# Merge the adjusted prices for the firms in the top 10
 prices = Ad(merge(MESA, AL, NFG, TCS, SWM, FRTA, EBF, NWPX, ABM, RLGT))
+
+# Get the returns for all of the firms
 Returns = na.omit(Return.calculate(prices))
+
+# Graph all of the returns of the top 10 firms
 charts.PerformanceSummary(Returns,main="Performance of $1.00 over time",wealth.index = TRUE)
 ```
 Create an equally weighted portfolio with the 10 stocks
 ```{r}
+# Create a vector with 0.1 ten times 
 w_ew = rep(0.1,10)
-w_ew
+
+# Calculate the returns taking into account the equal weights
 portfolio_returns_ew = Return.portfolio(Returns,weights = w_ew)
 
 colnames(portfolio_returns_ew) = c("Portfolio Returns")
+
+# Graph the performance of the portfolio created
 charts.PerformanceSummary(portfolio_returns_ew,main="Performance of $1.00 over time",wealth.index = TRUE)
 ```
 ```{r}
 library(quantmod)
+# Download the data for the S&P500 which is the index we are going to use to compare the market with the porfolio created
 getSymbols(Symbols = "^GSPC", from="2020-01-01", to="2020-12-31")
+# Get the adjusted prices
 spx500 = Ad(GSPC)
 
+# Calculate the returns for the SPX500
 ReturnsSPX = na.omit(Return.calculate(spx500))
+
+#Merge both the market and the portfolio created
 ReturnsTotal = merge(ReturnsSPX,portfolio_returns_ew)
+
+#Graph both of the returns
 charts.PerformanceSummary(ReturnsTotal,main="Performance of $1.00 on the SPX 500 over time",wealth.index = TRUE)
 ```
 The S&P500 and the portfolio holding returns were very similar and most of the the time the S&P was higher but at the end of the year 2020 both returns were very similar with the actual created portfolio performing little bit better that the market but it was not a high difference which means that the S&P500 is a great way to invest and can give great returns in contrast with a construction of a portfolio based on the f score and the earnings per share deflated by price which is the most explicative independent variable from the model 3 because it has a very low p value.
