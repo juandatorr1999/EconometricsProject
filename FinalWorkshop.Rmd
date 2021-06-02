@@ -10,7 +10,7 @@ output:
 
 Along with this workshop, a fundamental analysis is made from the U.S companies in order to predict and determine several characteristics related to survivability and the amount of expected return after investing in these companies. This was possible through the use of a complete dataset with all U.S companies from 2006 to 2019, and data like net income, expenses, total assets, adjusted prices, debt, activeness, field, etc. 
 
-The use of indicators and models, as tools for the calculation of the characteristics previously mentioned, is depicted in the workshop by the employment of F-Score for its capacity to define a successful portfolio investment and the use of the logit model to define an outcome with only two possibilities.
+The use of indicators and models, as tools for the calculation of the characteristics previously mentioned, is depicted in the workshop by the employment of F-Score for its capacity to define a successful portfolio investment and the use of the logit model to define an outcome with binary possibilities.
 
 
 
@@ -356,6 +356,10 @@ After considering the effect of the financial leverage an increase in the cash f
 
 
 
-After the analysis of these companies and the characteristics meant to reach by this workshop, we can observe a real application of Econometrics as a helper tool to create informed portfolio investments. Indicators like F-Score or signals, like the ones applied for inventory, are incredible resources to formalize fundamental analysis over companies and to obtain a broader perspective over their current status.
+In conclusion, after the analysis of these companies and the characteristics meant to reach by this workshop, we can observe a real application of Econometrics as a helper tool to create informed portfolio investments. Indicators like F-Score, earnings per share, book to market ratio or other signals, like the ones applied for inventory. This are incredible resources to formalize fundamental analysis over companies and to obtain a broader perspective over their current status.
+
+With the portfolio we created we can conclude that the S&P500 is a great instrument to invest in, given that the returns were very similar to the portfolio created based on the fundamental analysis.
 
 At the same time, we understand that emerging markets, like Mexico, have not been properly explored in comparison to markets like U.S or China. As a result, more research is needed to comprehend the different properties that control the behavior of these markets.
+
+Regarding the logit model it can be concluded that is a great way to predict a binary result for example whether a company will go bankrupt or not, this is done with the use of the sigmoid function and the use of the odds ratio that these predictions can be made. This can help to calculate if a company we invested in could be at risk of going bankrupt or closing which is a very important aspect to know due to the times we are currently facing.
